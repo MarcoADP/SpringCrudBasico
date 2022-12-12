@@ -6,6 +6,7 @@ import com.example.usuariocrud.service.StorageService;
 import com.example.usuariocrud.service.UsuarioService;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -31,28 +32,28 @@ public class UsuarioController {
 
     // CREATE
     @PostMapping( consumes = { "multipart/form-data" })
-    public @ResponseBody Usuario create (@RequestPart UsuarioParams params, @RequestPart MultipartFile foto) throws IOException {
+    public @ResponseBody Usuario create(@RequestPart UsuarioParams params, @RequestPart MultipartFile foto) throws IOException {
         return usuarioService.create(params, foto);
     }
 
     @PostMapping("/data")
-    public @ResponseBody Usuario createData (@RequestBody UsuarioParams params) {
+    public @ResponseBody Usuario createData(@Valid @RequestBody UsuarioParams params) {
         return usuarioService.createData(params);
     }
 
     // UPDATE
     @PutMapping(value="{id}", consumes = { "multipart/form-data" })
-    public @ResponseBody Usuario update (@PathVariable Integer id, @RequestPart UsuarioParams params, @RequestPart MultipartFile foto) throws IOException {
+    public @ResponseBody Usuario update(@PathVariable Integer id, @RequestPart UsuarioParams params, @RequestPart MultipartFile foto) throws IOException {
         return usuarioService.update(id, params, foto);
     }
 
     @PutMapping("/data/{id}")
-    public @ResponseBody Usuario updateData (@PathVariable Integer id, @RequestBody UsuarioParams params) {
+    public @ResponseBody Usuario updateData(@PathVariable Integer id, @RequestBody UsuarioParams params) {
         return usuarioService.updateData(id, params);
     }
 
     @PutMapping("/foto/{id}")
-    public @ResponseBody Usuario updateFoto (@PathVariable Integer id, @RequestPart MultipartFile foto) throws IOException {
+    public @ResponseBody Usuario updateFoto(@PathVariable Integer id, @RequestPart MultipartFile foto) throws IOException {
         return usuarioService.updateFoto(id, foto);
     }
 
@@ -62,7 +63,7 @@ public class UsuarioController {
         return usuarioService.findAll();
     }
 
-    @GetMapping(path="/foto/{id}" , produces = "application/octet-stream")
+    @GetMapping(path="/foto/{id}" , produces="application/octet-stream")
     public ResponseEntity getFoto(@PathVariable Integer id) {
         Response.ResponseBuilder response;
         Usuario usuario = usuarioService.findByIdOrThrow(id);
@@ -94,7 +95,6 @@ public class UsuarioController {
         return usuarioService.findByCodigo(codigo);
     }
 
-
     // DELETE
     @DeleteMapping("{id}")
     public @ResponseBody void delete(@PathVariable Integer id) {
@@ -102,12 +102,12 @@ public class UsuarioController {
     }
 
     @PutMapping("/remove/{id}")
-    public @ResponseBody Usuario remove (@PathVariable Integer id) {
+    public @ResponseBody Usuario remove(@PathVariable Integer id) {
         return usuarioService.remove(id);
     }
 
     @PutMapping("/restore/{id}")
-    public @ResponseBody Usuario restore (@PathVariable Integer id) {
+    public @ResponseBody Usuario restore(@PathVariable Integer id) {
         return usuarioService.restore(id);
     }
 
