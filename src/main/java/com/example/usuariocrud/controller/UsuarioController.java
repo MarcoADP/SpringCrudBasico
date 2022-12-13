@@ -2,12 +2,10 @@ package com.example.usuariocrud.controller;
 
 import com.example.usuariocrud.entity.Usuario;
 import com.example.usuariocrud.params.UsuarioParams;
-import com.example.usuariocrud.service.StorageService;
 import com.example.usuariocrud.service.UsuarioService;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.validation.Valid;
-import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -65,16 +63,9 @@ public class UsuarioController {
 
     @GetMapping(path="/foto/{id}" , produces="application/octet-stream")
     public ResponseEntity getFoto(@PathVariable Integer id) {
-        Response.ResponseBuilder response;
+
         Usuario usuario = usuarioService.findByIdOrThrow(id);
-        String baseFileSystemPath = "/home/marco/IdeaProjects/usuariocrud/src/main/resources/crud_fotos";
-
-        String filepath = baseFileSystemPath + "/" + usuario.getFoto();
-        System.out.println(filepath);
-
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream in = classloader.getResourceAsStream(usuario.getFoto());
-        String ext = StorageService.getFileExtension(usuario.getFoto());
+        InputStream in = usuarioService.getFoto(usuario.getFoto());
 
         if (in != null) {
             return ResponseEntity.ok()
