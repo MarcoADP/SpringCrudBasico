@@ -4,6 +4,7 @@ import com.example.usuariocrud.entity.Usuario;
 import com.example.usuariocrud.params.UsuarioParams;
 import com.example.usuariocrud.repository.UsuarioRepository;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -18,8 +19,12 @@ public class UsuarioService {
     final
     UsuarioRepository usuarioRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    final
+    StorageService storageService;
+
+    public UsuarioService(UsuarioRepository usuarioRepository, StorageService storageService) {
         this.usuarioRepository = usuarioRepository;
+        this.storageService = storageService;
     }
 
     private Usuario save(Usuario usuario) {
@@ -31,7 +36,7 @@ public class UsuarioService {
         if (file != null) {
             String filename = UUID.randomUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
             usuario.setFoto(filename);
-            StorageService.saveFileLocal(file, usuario.getFoto());
+            storageService.saveFileLocal(file, usuario.getFoto());
         }
 
         return save(usuario);
@@ -50,7 +55,7 @@ public class UsuarioService {
             if (usuario.getFoto() == null) {
                 usuario.setFoto(UUID.randomUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
             }
-            StorageService.saveFileLocal(file, usuario.getFoto());
+            storageService.saveFileLocal(file, usuario.getFoto());
         }
 
         return save(usuario);
@@ -69,7 +74,7 @@ public class UsuarioService {
             if (usuario.getFoto() == null) {
                 usuario.setFoto(UUID.randomUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
             }
-            StorageService.saveFileLocal(file, usuario.getFoto());
+            storageService.saveFileLocal(file, usuario.getFoto());
         }
 
         return save(usuario);
@@ -102,5 +107,9 @@ public class UsuarioService {
 
     public Usuario findByCodigo(String codigo) {
         return usuarioRepository.findFirstByCodigo(codigo);
+    }
+
+    public InputStream getFoto(String foto) {
+        return storageService.getFileLocal(foto);
     }
 }
